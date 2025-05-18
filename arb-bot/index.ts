@@ -2,22 +2,27 @@ require("dotenv")
 import { clobClient } from "./polymarket/utils/lib";
 import { Side } from "@polymarket/clob-client";
 import { approveAllowance } from "./polymarket/utils/utils";
+import { getProboOrderBook } from "./probo/utils/utils";
 
 const TOKEN_ID = "104173557214744537570424345347209544585775842950109756851652855913015295701992";
 
-approveAllowance();
+await getProboOrderBook(4050195);
 
-// const orderbook = await clobClient.getOrderBook( TOKEN_ID);
+// approveAllowance();
+
+
+
+const orderbook = await clobClient.getOrderBook( TOKEN_ID);
 // console.log("orderbooks", orderbook);
 
 // Create a buy order for 100 NO for 0.50c
-// const order = await clobClient.createOrder({
-//     tokenID: TOKEN_ID,
-//     price: 0.5,
-//     side: Side.BUY,
-//     size: 5,
-//     feeRateBps: 0,
-// });
+const order = await clobClient.createOrder({
+    tokenID: TOKEN_ID,
+    price: 0.1,
+    side: Side.BUY,
+    size: 5,
+    feeRateBps: 0,
+});
 
 // console.log("Order : ", order)
 

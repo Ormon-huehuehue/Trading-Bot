@@ -1,12 +1,9 @@
 import { clobClient, signer } from "./lib"
 import { ETH_PRIVATE_KEY } from "../../config";
-import { ethers } from "ethers";
-import { getContractConfig } from "@polymarket/clob-client";
+import { ethers, MaxUint256 } from "ethers";
+import { getContractConfig, Chain } from "@polymarket/clob-client";
 import { ctfAbi } from "../abi/ctfAbi";
 import { usdcAbi} from "../abi/usdcAbi"
-
-
-console.log("key : ", process.env.POLYMARKET_PRIVATE_KEY)
 
 if(!ETH_PRIVATE_KEY){
     throw new Error("Private key is not set")
@@ -31,11 +28,19 @@ const wallet = new ethers.Wallet(ETH_PRIVATE_KEY, provider);
 
 
 const approveAllowance = async  ()=>{
-    console.log("key : ", ETH_PRIVATE_KEY)
     const usdc = getUsdcContract(true, wallet)
-    console.log("usdc : ", await usdc.getAddress())
+    const contractConfig = getContractConfig(Chain.POLYGON) //polygon
+    const txn = await usdc.approve(contractConfig.conditionalTokens, MaxUint256, {
+        gasPrice : 100_000_000_000,
+        gasLimit:  200_000,
+    })
+    console.log("transaction : ", txn)
+
+    console.log("Setting usdc allowance for CTF : ", txn.hash)
+    await txn.wait();
+    // console.log("usdc : ", await usdc.getAddress())
     const ctf = getCtfContract(true, wallet)
-    console.log("ctf : ", await ctf.getAddress())
+    // console.log("ctf : ", await ctf.getAddress())
 
     const udscAllowanceCtf = await usdc.allowance(wallet.address, await ctf.getAddress())
     console.log("usdc allowance : ", udscAllowanceCtf)
