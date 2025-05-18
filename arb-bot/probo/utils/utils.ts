@@ -9,7 +9,7 @@ const getProboOrderBook = async (eventId: number) =>{
         "content-type" : "application/json"
     }
 
-    const orderBook = await axios.get(`https://prod.api.probo.in/api/v3/tms/trade/bestAvailablePrice?eventId=${eventId}`,
+    const response = await axios.get(`https://prod.api.probo.in/api/v3/tms/trade/bestAvailablePrice?eventId=${eventId}`,
         {
             headers
         }
@@ -17,13 +17,13 @@ const getProboOrderBook = async (eventId: number) =>{
 
     let book : OrderBookProps = { buy : {}, sell : {}}
 
-    Object.keys(orderBook.data.data.available_qty.buy).forEach((key : string, index)=>{
-        book.buy[key] = orderBook.data.data.available_qty.buy[key];
+    Object.keys(response.data.data.available_qty.buy).forEach((key : string, index)=>{
+        book.buy[key] = response.data.data.available_qty.buy[key];
     })
-    Object.keys(orderBook.data.data.available_qty.sell).forEach((key : string, index)=>{
-        book.sell[key] = orderBook.data.data.available_qty.sell[key];
+    Object.keys(response.data.data.available_qty.sell).forEach((key : string, index)=>{
+        book.sell[key] = response.data.data.available_qty.sell[key];
     })
-    console.log("orderbook : ", book)
+    console.log("Probo orderbook : ", book)
 
     return book;
 

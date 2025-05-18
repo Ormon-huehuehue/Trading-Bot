@@ -4,6 +4,7 @@ import { ethers, MaxUint256 } from "ethers";
 import { getContractConfig, Chain } from "@polymarket/clob-client";
 import { ctfAbi } from "../abi/ctfAbi";
 import { usdcAbi} from "../abi/usdcAbi"
+import type { OrderBookProps } from "../../types";
 
 if(!ETH_PRIVATE_KEY){
     throw new Error("Private key is not set")
@@ -47,11 +48,31 @@ const approveAllowance = async  ()=>{
 
 }
 
-const createOrder = ()=>{
+const getPolymarketOrderBook = async (tokenId : string)=>{
+    const response = await clobClient.getOrderBook(tokenId);
+    let book : OrderBookProps = { buy : {}, sell : {}}
+
+    response.bids.map((bid : {price : string, size : string}) =>{
+        book.buy[bid.price] = bid.size;
+    })
+    response.asks.map((ask : {price : string, size : string}) =>{
+        book.sell[ask.price] = ask.size;
+    })
+
+    console.log("Polymarket order book : ", book)
+
+    return book
+
+}
+
+const createOrder = async  ()=>{
+  
+    
 
 }
 
 export {
     approveAllowance,
-    createOrder
+    createOrder,
+    getPolymarketOrderBook
 }
