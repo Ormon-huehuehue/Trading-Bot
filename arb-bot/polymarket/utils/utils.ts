@@ -52,18 +52,16 @@ const getPolymarketOrderBook = async (tokenId : string)=>{
     const response = await clobClient.getOrderBook(tokenId);
     let book : OrderBookProps = { buy : {}, sell : {}}
 
-    response.bids.map((bid : {price : string, size : string}) =>{
-        book.buy[bid.price] = bid.size;
-    })
     response.asks.map((ask : {price : string, size : string}) =>{
-        book.sell[ask.price] = ask.size;
+        book.buy[ask.price] = ask.size;
     })
-
-    console.log("Polymarket order book : ", book)
-
+    response.bids.map((bid : {price : string, size : string}) =>{
+        book.sell[bid.price] = bid.size;
+    })
+    
     return book
 
-}
+} 
 
 const createOrder = async  ()=>{
   

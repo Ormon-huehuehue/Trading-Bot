@@ -23,7 +23,6 @@ const getProboOrderBook = async (eventId: number) =>{
     Object.keys(response.data.data.available_qty.sell).forEach((key : string, index)=>{
         book.sell[key] = response.data.data.available_qty.sell[key];
     })
-    console.log("Probo orderbook : ", book)
 
     return book;
 
